@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Privacy-Preserving AI Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div>
+            <h1>Privacy-Preserving AI Deployment Platform</h1>
+            <p>Secure model inference for sensitive student performance data.</p>
+        </div>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <a href="/admin/">Admin</a>
+                <form action="{% url 'logout' %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
