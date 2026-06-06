@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% block title %}Sign In &mdash; MediScan{% endblock %}
+
+{% block auth_content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+
+  <!-- Background orbs -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="w-full max-w-md relative z-10">
+    <!-- Logo -->
+    <div class="text-center mb-8 animate-slide-up">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-purple-600 mb-4 glow-brand">
+        <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-1">Welcome to <span class="text-brand-400">MediScan</span></h1>
+      <p class="text-gray-400 text-sm">Privacy-Preserving AI Model Platform</p>
+    </div>
+
+    <!-- Card -->
+    <div class="glass-card rounded-2xl p-8 animate-fade-in">
+      <h2 class="text-xl font-semibold text-white mb-6">Sign In to Your Account</h2>
+
+      <form method="post" action="{% url 'login' %}" id="login-form">
+        {% csrf_token %}
+        <div class="space-y-5">
+
+          <div>
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              Username
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <p class="mt-1 text-xs text-red-400">{{ form.username.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              Password
+            </label>
+            {{ form.password }}
+            {% if form.password.errors %}
+              <p class="mt-1 text-xs text-red-400">{{ form.password.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <button type="submit" id="btn-login"
+                  class="w-full py-3 px-4 rounded-xl font-semibold text-white
+                         bg-gradient-to-r from-brand-600 to-purple-600
+                         hover:from-brand-500 hover:to-purple-500
+                         transform hover:scale-[1.02] transition-all duration-200
+                         focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-lg">
+            Sign In
+          </button>
+        </div>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-gray-400">
+        Don't have an account?
+        <a href="{% url 'register' %}" id="link-register" class="text-brand-400 hover:text-brand-300 font-medium transition-colors">
+          Register here
+        </a>
+      </p>
+    </div>
+
+    <!-- Privacy notice -->
+    <div class="mt-6 text-center">
+      <div class="inline-flex items-center gap-2 text-xs text-gray-600">
+        <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        End-to-end privacy. Raw data is never stored.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock auth_content %}

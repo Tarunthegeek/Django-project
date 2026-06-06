@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex; min-height:100vh;">
+
+  <!-- Ambient background orbs -->
+  <div style="position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:-10;">
+    <div class="orb-slow-1" style="position:absolute; top:10%; left:20%; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(99,102,241,0.08) 0%, rgba(99,102,241,0) 70%); filter:blur(50px);"></div>
+    <div class="orb-slow-2" style="position:absolute; bottom:15%; right:10%; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle, rgba(147,51,234,0.06) 0%, rgba(147,51,234,0) 70%); filter:blur(50px);"></div>
+  </div>
+
+  <!-- ── Sidebar ── -->
+  <aside style="width:256px;min-height:100vh;background:rgba(17,17,24,0.75);backdrop-filter:blur(20px);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:40;overflow-y:auto;">
+    <div style="padding:1.4rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:2.5rem;height:2.5rem;border-radius:0.75rem;background:linear-gradient(135deg,#6366f1,#9333ea);display:flex;align-items:center;justify-content:center;" class="glow-brand">
+          <svg style="width:1.4rem;height:1.4rem;color:white;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+          </svg>
+        </div>
+        <div>
+          <h1 style="font-weight:700;color:white;font-size:1.1rem;line-height:1.2;margin:0;">MediScan</h1>
+          <p style="font-size:0.68rem;color:#818cf8;font-weight:500;margin:0;">Privacy AI Platform</p>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0.85rem 1rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;border-radius:0.75rem;background:#1a1a27;">
+        <div style="width:1.9rem;height:1.9rem;border-radius:9999px;background:linear-gradient(135deg,#6366f1,#9333ea);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:white;flex-shrink:0;">
+          {{ user.username|slice:":1"|upper }}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <p style="font-size:0.85rem;font-weight:600;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0;">{{ user.username }}</p>
+          <p style="font-size:0.68rem;color:#6b7280;margin:0;">{{ user.role|capfirst }}</p>
+        </div>
+        {% if user.role == 'admin' %}
+        <span style="font-size:0.62rem;background:rgba(79,70,229,0.28);color:#a5b4fc;padding:0.12rem 0.5rem;border-radius:9999px;border:1px solid rgba(99,102,241,0.3);white-space:nowrap;">Admin</span>
+        {% endif %}
+      </div>
+    </div>
+    <nav style="flex:1;padding:0.85rem;display:flex;flex-direction:column;gap:0.2rem;">
+      <p style="font-size:0.62rem;color:#374151;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:0 0.75rem;margin-bottom:0.4rem;margin-top:0.2rem;">Main</p>
+      <a href="{% url 'dashboard' %}" id="nav-dashboard" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="{% url 'infer' %}" id="nav-infer" class="nav-link {% if request.resolver_match.url_name == 'infer' %}active{% endif %}">
+        <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        Run Inference
+      </a>
+      <a href="{% url 'history' %}" id="nav-history" class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}">
+        <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        History
+      </a>
+      {% if user.role == 'admin' %}
+      <p style="font-size:0.62rem;color:#374151;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:0 0.75rem;margin-top:0.85rem;margin-bottom:0.4rem;">Admin</p>
+      <a href="{% url 'admin_panel' %}" id="nav-admin" class="nav-link {% if request.resolver_match.url_name == 'admin_panel' %}active{% endif %}">
+        <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Admin Panel
+      </a>
+      <a href="{% url 'audit' %}" id="nav-audit" class="nav-link {% if request.resolver_match.url_name == 'audit' %}active{% endif %}">
+        <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Audit Logs
+      </a>
+      {% endif %}
+    </nav>
+    <div style="padding:0.85rem;border-top:1px solid #22223a;">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" id="btn-logout" class="nav-link" style="width:100%;color:#f87171;border:none;background:none;cursor:pointer;"
+                onmouseover="this.style.background='rgba(239,68,68,0.12)'" onmouseout="this.style.background='none'">
+          <svg style="width:1.15rem;height:1.15rem;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Sign Out
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main style="margin-left:256px;flex:1;display:flex;flex-direction:column;min-height:100vh;">
+    <header style="height:3.75rem;background:rgba(10,10,15,0.65);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);">
+      <div>
+        <h2 style="font-weight:600;color:white;font-size:1.05rem;margin:0;">{% block page_title %}Dashboard{% endblock %}</h2>
+        <p style="font-size:0.72rem;color:#6b7280;margin:0;">{% block page_subtitle %}{% endblock %}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:9999px;padding:0.35rem 0.85rem;">
+        <span class="pdot"></span>
+        <span style="font-size:0.72rem;color:#6ee7b7;font-weight:500;">Privacy Protected</span>
+      </div>
+    </header>
+
+    {% if messages %}
+    <div style="padding:1rem 2rem 0;" class="anim-fade">
+      {% for message in messages %}
+      <div style="padding:0.75rem 1rem;border-radius:0.75rem;margin-bottom:0.5rem;
+        {% if message.tags == 'error' %}background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;
+        {% elif message.tags == 'success' %}background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;
+        {% elif message.tags == 'warning' %}background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);color:#fde68a;
+        {% else %}background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;{% endif %}">
+        <span style="font-size:0.875rem;">{{ message }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div style="flex:1;padding:2rem;" class="anim-up">
+      {% block page_content %}{% endblock %}
+    </div>
+  </main>
+</div>
+
+{% else %}
+{% if messages %}
+<div style="position:fixed;top:1rem;right:1rem;z-index:9999;width:22rem;">
+  {% for message in messages %}
+  <div style="padding:0.75rem 1rem;border-radius:0.75rem;margin-bottom:0.5rem;box-shadow:0 8px 24px rgba(0,0,0,0.5);
+    {% if message.tags == 'error' %}background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;
+    {% elif message.tags == 'success' %}background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.35);color:#6ee7b7;
+    {% elif message.tags == 'warning' %}background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.35);color:#fde68a;
+    {% else %}background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;{% endif %}">
+    <span style="font-size:0.875rem;">{{ message }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+{% endblock %}
